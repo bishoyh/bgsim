@@ -1,0 +1,1487 @@
+<!doctype html>
+<html>
+  <head>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>BGSIMweb - Biogeograafia simulatsioon / Biogeography simulation / Meelis Pärtel / Tartu Ülikool / University of Tartu</title>
+    <STYLE TYPE="text/css">
+INPUT {text-align: right; }
+#canvas {cursor: crosshair;}
+body {
+    text-align: center;
+}
+#main {
+    text-align: left;
+    width: 1200px;
+    height: 600px;
+    position: relative;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+</STYLE>
+  </head>
+<body>
+<script language="javascript" type="text/javascript">
+var canvas;
+var ctx;
+var x ;
+var y ;
+var dim = 100;
+var r = 4;
+var WIDTH = r * dim * 2;
+var HEIGHT = r * dim;
+var varv = "black";
+var aeg = 0;
+var aegmax = 0;
+var liik_init = 1;
+var hair = 0.0;
+var evol = 0.000;
+var levi = 0.1;
+var migr = 0.1;
+var konkur = 0;
+var tun = true;
+var drag = false;
+var merejoon = false;
+var merix;
+var meriy;
+var maameri = 1;
+var txt21;
+var txt22;
+var txt23;
+var txt24;
+var i;
+var maa = new Array(dim * dim);
+var elu = new Array(dim * dim);
+var liik_tunnus = new Array();
+var liik_varv = new Array();
+var hall;
+var saar_arv = 0;
+var saar_varv = ["gray", "black", "blue", "green", "orange", "purple", "red"];
+var saar_x = new Array();
+var saar_y = new Array();
+var saar_l = new Array();
+var saar_h = new Array();
+var saar_e = new Array();
+var saar_m = new Array();
+var saar_u = new Array();
+var liigirikkus = new Array();
+var saar_max = [0, 0, 0, 0, 0, 0, 0];
+var maxlr = 0;
+var sissevalja;
+var tekst;
+</script>
+<div id="main">
+<font size="5" face="Arial">BGSIM<i>web</i></font>
+<font  size="3" face="Arial ">  ver. 1. -  <span id="txt1"></span>
+<div id="txt2"></div></font>
+<table border="0" align="left">
+   <tr VALIGN=TOP>
+   <td>
+<font  size="3" face="Arial ">
+  <div align="left">
+        <canvas id="canvas" width="60" height="30" >
+         Sinu veebibrauser ei toeta HTML5 Canvas funktsiooni.<br>Your browser do not support HTML5 Canvas function.
+        </canvas>
+    </div>
+<form name="jooni" >
+<span id="txt18"></span>
+<input type="radio" name="joonista1" id="joonista" value="1" checked><span id="txt18a"><!-- Maad --></span>
+<input type="radio" name="joonista1" id="joonista" value="0"><span id="txt18b"><!-- Merd --></span>
+</form>
+<form name="tunnu" id="txt19">
+ Värv näitab liigi
+<input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID
+<input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> tunnust (hele = konkurent, tume = levija)
+</form>
+<FORM>
+<INPUT TYPE="BUTTON" VALUE="Lae maailm" id="sisse" onClick="laadi()">
+<INPUT TYPE="BUTTON" VALUE="Salvesta maailm" id="valja" onClick="salvesta()">
+</font>
+<font  size="1" face="Arial ">
+<span id="txt25"> </span><br>
+<textarea name="tekst" id="tekst" cols="110" rows="4" style="font-size: 9pt;"></textarea>
+</font>
+</FORM>
+</td>
+      <td>
+<font  size="3" face="Arial">
+<div align="right">
+<form id="keel0">
+<input type="radio" name="keel1" id="keel1" value="1" checked onChange="keel()">EST
+<input type="radio" name="keel1" id="keel1" value="0" onChange="keel()">ENG
+</form>
+</div>
+<table BORDER=2 CELLPADDING=3 CELLSPACING=1 RULES=ROWS FRAME=HSIDES >
+   <tr>
+      <td>
+<table id="tblSaared" border="0" align="left">
+<thead>
+<tr>
+  <th>
+<div style="width: 150px">
+<form>
+  <span id="txt3"></span> <input type="button" value="+" id="uussaar" onclick="addColumn('tblSaared')" /> <input type="button" value="-" id="saarmaha" onclick="deleteColumn('tblSaared')" />
+</form>
+</div>
+  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>
+<div align="right">X</div></td>
+</tr>
+<tr>
+  <td>
+<div align="right">Y</div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt4"></div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt5"></div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt6"></div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt7"></div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt8"></div></td>
+</tr>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt9"></div></td>
+</tr>
+<tr>
+  <td>
+<div align="right" id="txt10"></div></td>
+</tr>
+</tbody>
+</table>
+</td></tr><tr><td>
+<table border="0" align="left">
+   <tr>
+      <td id="txt11" align="right"></td>
+      <td>
+<select name="algliik" id="algliik" style="width: 60px; text-align: center; ">
+<option selected="selected" value="1">1</option>
+<option value="10">10</option>
+<option value="100">100</option>
+<option value="1000">1000</option>
+</select>
+</td>
+   </tr>
+   <tr>
+      <td id="txt12" align="right"></td>
+      <td>
+<select name="mort" id="mort" style="width: 60px; text-align: center;">
+<option value="0">0</option>
+<option selected="selected" value="0.01">0.01</option>
+<option value="0.02">0.02</option>
+<option value="0.05">0.05</option>
+<option value="0.1">0.10</option>
+</select>
+</td>
+   </tr>
+   <tr>
+      <td id="txt13" align="right"></td>
+      <td>
+<select name="disp" id="disp" style="width: 60px; text-align: center;">
+<option value="0">0</option>
+<option  value="0.1">0.1</option>
+<option selected="selected" value="0.2">0.2</option>
+<option value="0.3">0.3</option>
+</select>
+      </td>
+   </tr>
+      <tr>
+      <td id="txt14" align="right"></td>
+      <td>
+<select name="konkurents" id="konkurents" style="width: 60px; text-align: center;">
+<option value="0">0</option>
+<option value="0.2">0.2</option>
+<option selected="selected" value="0.5">0.5</option>
+<option value="0.7">0.7</option>
+<option value="1">1.0</option>
+</select>
+      </td>
+   </tr>
+   <tr>
+      <td id="txt15" align="right"></td>
+      <td>
+<select name="muta" id="muta" style="width: 60px; text-align: center;">
+<option value="0">0</option>
+<option selected="selected" value="0.001">0.001</option>
+<option value="0.005">0.005</option>
+<option value="0.01">0.010</option>
+</select>
+      </td>
+   </tr>
+      <tr>
+      <td id="txt16" align="right"></td>
+      <td>
+<select name="ddlQuery1" id="ddlQuery1" style="width: 60px; text-align: center;">
+<option value="50">50</option>
+<option selected="selected" value="100">100</option>
+<option value="200">200</option>
+<option value="300">300</option>
+</select>
+</select>
+      </td>
+   </tr>
+</table>
+ </font>
+</td></tr><tr><td>
+<div style="width: 300px">
+<FORM>
+<INPUT TYPE="BUTTON" VALUE="KÄIMA" id="kaima" onClick="init()">
+<INPUT TYPE="BUTTON" VALUE="SEIS" id="paus" onClick="aitab()">
+<INPUT TYPE="BUTTON" VALUE="ALGUS" id="algseis" onClick="test()">
+</FORM>
+</div>
+</td>
+   </tr>
+</td></tr><tr><td id="txt20">
+ <form>
+Stsenaarium:
+<select name="stsenaarium" id="stsenaarium" onchange="valmistatud()">
+<option selected="selected" value="-1">- Vali -</option>
+<option value="0">Kustuta saared </option>
+<option value="1">Saarte biogeograafia</option>
+<option value="2">Saare kuju</option>
+<option value="3">Mitu väikest või üks suur?</option>
+</select>
+</form>
+</td> </tr>
+</table>
+</td>
+   </tr>
+</table>
+</div>
+<script type="text/javascript">
+canvas = document.getElementById("canvas");
+ctx = canvas.getContext("2d");
+canvas.width  = WIDTH + 2 * r;
+canvas.height = HEIGHT + 2 * r;
+canvas.addEventListener('mousedown', mouseDown, false);
+canvas.addEventListener('mouseup', mouseUp, false);
+canvas.addEventListener('mousemove', mouseMove, false);
+canvas.onmousedown = function(event)
+{
+   event.preventDefault();
+}
+;
+canvas.onmousemove = function(event)
+{
+   event.preventDefault();
+}
+;
+canvas.onmouseup = function(event)
+{
+   event.preventDefault();
+}
+;
+document.getElementById("stsenaarium").value = "-1";
+// nullime stsenaariumi
+uussaar = document.getElementById("uussaar");
+saarmaha = document.getElementById("saarmaha");
+kaima = document.getElementById("kaima");
+paus = document.getElementById("paus");
+algseis = document.getElementById("algseis");
+joonista = document.getElementById("joonista");
+sisse = document.getElementById("sisse");
+valja = document.getElementById("valja");
+stsenaarium = document.getElementById("stsenaarium");
+keel1 = document.getElementById("keel1");
+if(document.URL.search("eng") >= 0)
+{
+   keel1.checked = false;
+   keel0[1].checked = true;
+}
+i = maa.length;
+while(i -- )
+{
+   maa[i] = 0;
+}
+addColumn('tblSaared');
+document.getElementById("m1").checked = true;
+saarmaha.disabled = true;
+paus.disabled = true;
+keel();
+function mouseDown(e)
+{
+   if (kaima.disabled == false)
+   {
+      var recto = canvas.getBoundingClientRect();
+      rect.startX = e.clientX - 0 * r - recto.left;
+      rect.startY = e.clientY - 0 * r - recto.top;
+      xx = Math.round((rect.startX - r / 2) / r);
+      yy = Math.round((rect.startY - r / 2) / r);
+      drag = true;
+      saareke = 0;
+      muutX = false;
+      muutY = false;
+      muutW = false;
+      muutH = false;
+      algX = 0;
+      algY = 0;
+      algW = 0;
+      algH = 0;
+      for (i = 1; i <= saar_arv; i ++ )
+      {
+         if (saar_u[i] == true && xx == saar_x[i] && yy >= (saar_y[i]) && yy <= (saar_y[i] + saar_h[i] + 1))
+         {
+            saareke = i;
+            muutX = true;
+            algW = saar_l[saareke];
+            algX = saar_x[saareke];
+            drag = false;
+         }
+         if (saar_u[i] == true && xx == (saar_x[i] + saar_l[i] + 1) && yy >= (saar_y[i]) && yy <= (saar_y[i] + saar_h[i] + 1))
+         {
+            saareke = i;
+            muutW = true;
+            algW = saar_l[saareke];
+            algX = saar_x[saareke];
+            drag = false;
+         }
+         ;
+         if (saar_u[i] == true && yy == saar_y[i] && xx >= (saar_x[i]) && xx <= (saar_x[i] + saar_l[i] + 1))
+         {
+            saareke = i;
+            muutY = true;
+            algH = saar_h[saareke];
+            algY = saar_y[saareke];
+            drag = false;
+         }
+         if (saar_u[i] == true && yy == (saar_y[i] + saar_h[i] + 1) && xx >= (saar_x[i]) && xx <= (saar_x[i] + saar_l[i] + 1))
+         {
+            saareke = i;
+            muutH = true;
+            algH = saar_h[saareke];
+            algY = saar_y[saareke];
+            drag = false;
+         }
+         ;
+      }
+      if (saareke > 0)
+      {
+         rect(saar_x[saareke] * r + r / 2, saar_y[saareke] * r + r / 2, saar_l[saareke] * r + r, saar_h[saareke] * r + r);
+         ctx.strokeStyle = "gray";
+         ctx.lineWidth = 3;
+         ctx.stroke();
+         if ((muutX == true || muutW == true) && muutY == false && muutH == false)
+         {
+            canvas.style.cursor = "e-resize";
+
+         }
+         if ((muutY == true || muutH == true) && muutX == false && muutW == false)
+         {
+            canvas.style.cursor = "n-resize";
+
+         }
+         if ((muutY == true && muutW == true) || (muutX == true && muutH == true))
+         {
+            canvas.style.cursor = "ne-resize";
+
+         }
+         if ((muutY == true && muutX == true) || (muutW == true && muutH == true))
+         {
+            canvas.style.cursor = "nw-resize";
+
+         }
+      }
+      if (saareke == 0)
+      {
+         maameri = 1;
+         if (joonista.checked == false)
+         {
+            maameri = 0;
+         }
+         xx = Math.round((rect.startX - 1.5 * r) / r);
+         yy = Math.round((rect.startY - 1.5 * r) / r);
+         if (xx < dim && yy < dim )
+         {
+            maa[pos(xx, yy)] = maameri;
+         }
+         saar();
+      }
+   }
+}
+function mouseUp()
+{
+   drag = false;
+   if (joonista.disabled == false)
+   {
+      canvas.style.cursor = "crosshair";
+   }
+   if (joonista.disabled == true)
+   {
+      canvas.style.cursor = "default";
+   }
+   if (saareke > 0)
+   {
+      saareke = 0;
+      saar();
+   }
+}
+function mouseMove(e)
+{
+   if (kaima.disabled == false)
+   {
+      var xxx;
+      var yyy;
+      var recto = canvas.getBoundingClientRect();
+      var halliks = 0;
+      xxx = Math.round((e.clientX - 0 * r - recto.left - r / 2) / r);
+      yyy = Math.round((e.clientY - 0 * r - recto.top - r / 2) / r);
+      for (i = 1; i <= saar_arv; i ++ )
+      {
+         if (saar_u[i] == true && xxx == saar_x[i] && yyy >= (saar_y[i]) && yyy <= (saar_y[i] + saar_h[i] + 1))
+         {
+            halliks = i;
+         }
+         if (saar_u[i] == true && xxx == (saar_x[i] + saar_l[i] + 1) && yyy >= (saar_y[i]) && yyy <= (saar_y[i] + saar_h[i] + 1))
+         {
+            halliks = i;
+         }
+         ;
+         if (saar_u[i] == true && yyy == saar_y[i] && xxx >= (saar_x[i]) && xxx <= (saar_x[i] + saar_l[i] + 1))
+         {
+            halliks = i;
+         }
+         if (saar_u[i] == true && yyy == (saar_y[i] + saar_h[i] + 1) && xxx >= (saar_x[i]) && xxx <= (saar_x[i] + saar_l[i] + 1))
+         {
+            halliks = i;
+         }
+         ;
+      }
+      if (halliks > 0)
+      {
+         rect(saar_x[halliks] * r + r / 2, saar_y[halliks] * r + r / 2, saar_l[halliks] * r + r, saar_h[halliks] * r + r);
+         ctx.strokeStyle = "gray";
+         ctx.lineWidth = 3;
+         ctx.stroke();
+         hall = halliks;
+      }
+      if (hall > 0 && halliks == 0 )
+      {
+         // hallilt ära minek
+         rect(saar_x[hall] * r + r / 2, saar_y[hall] * r + r / 2, saar_l[hall] * r + r, saar_h[hall] * r + r);
+         ctx.strokeStyle = saar_varv[hall];
+         ctx.lineWidth = 3;
+         ctx.stroke();
+         hall = 0;
+      }
+      if (drag == true || saareke > 0)
+      {
+         var recto = canvas.getBoundingClientRect();
+         rect.w = (e.clientX - 0 * r - recto.left) - rect.startX;
+         rect.h = (e.clientY - 0 * r - recto.top) - rect.startY ;
+         joonW = Math.round(rect.w / r);
+         joonH = Math.round(rect.h / r);
+         joonX = Math.round((rect.startX - 1.5 * r) / r);
+         joonY = Math.round((rect.startY - 1.5 * r) / r);
+         if (joonX + joonW >= dim)
+         {
+            joonW = dim - joonX;
+            drag = false;
+            saareke = 0;
+         }
+         if (joonY + joonH >= dim)
+         {
+            joonH = dim - joonY;
+            drag = false;
+            saareke = 0;
+         }
+         if (joonX + joonW <= 0)
+         {
+            joonW = 0 - joonX;
+            drag = false;
+            saareke = 0;
+         }
+         if (joonY + joonH <= 0)
+         {
+            joonH = 0 - joonY;
+            drag = false;
+            saareke = 0;
+         }
+      }
+      if (drag == true && kaima.disabled == false)
+      {
+         if (joonW < 0)
+         {
+            joonX = joonX + joonW;
+            joonW = - 1 * joonW + 1;
+         }
+         if (joonH < 0)
+         {
+            joonY = joonY + joonH;
+            joonH = - 1 * joonH + 1;
+         }
+         for (x = joonX; x < (joonX + joonW); x ++ )
+         {
+            for (y = joonY; y < (joonY + joonH); y ++ )
+            {
+               maa[pos(x, y)] = maameri;
+               merix = x;
+               meriy = y;
+            }
+         }
+         saar();
+      }
+      if (saareke > 0 && kaima.disabled == false)
+      {
+         if (muutX == true)
+         {
+            if (algX + joonW >= algX + algW)
+            {
+               joonW = algW - 1;
+            }
+            document.getElementById('x' + saareke).value = algX + joonW;
+            document.getElementById('l' + saareke).value = algW - joonW;
+         }
+         if (muutW == true)
+         {
+            document.getElementById('l' + saareke).value = algW + joonW;
+         }
+         if (muutH == true)
+         {
+            if (algH + joonH <= 1)
+            {
+               joonH = 1 - algH;
+            }
+            document.getElementById('y' + saareke).value = dim - algY - joonH - algH;
+            document.getElementById('h' + saareke).value = algH + joonH;
+         }
+         if (muutY == true)
+         {
+            if (algH - joonH <= 1)
+            {
+               joonH = algH - 1;
+            }
+            document.getElementById('h' + saareke).value = algH - joonH;
+         }
+         saar();
+      }
+   }
+}
+function isNumberKey(evt)
+{
+   var charCode = (evt.which) ? evt.which : event.keyCode
+   if (charCode > 31 && (charCode < 48 || charCode > 57))
+   return false;
+   return true;
+}
+function addColumn(tblId)
+{
+   if (saar_arv < 6 && aeg == 0)
+   {
+      saar_arv ++ ;
+      saarmaha.disabled = false;
+      var tblHeadObj = document.getElementById(tblId).tHead;
+      for (var h = 0; h < tblHeadObj.rows.length; h ++ )
+      {
+         var newTH = document.createElement('th');
+         tblHeadObj.rows[h].appendChild(newTH);
+         a = (tblHeadObj.rows[h].cells.length - 1);
+         newTH.innerHTML = '<font color="'+saar_varv[a].toString()+'">' + a + '</font>';
+      }
+      var tblBodyObj = document.getElementById(tblId).tBodies[0];
+      var newCell = tblBodyObj.rows[0].insertCell( - 1);
+      newCell.innerHTML = '<input name="x'+a+'" id="x'+a+'" onkeypress="return isNumberKey(event)" type="text" onchange="saar()" value = "10" maxlength="2" size="1">';
+      var newCell = tblBodyObj.rows[1].insertCell( - 1);
+      newCell.innerHTML = '<input name="y'+a+'" id="y'+a+'" onkeypress="return isNumberKey(event)" type="text" onchange="saar()" value = "10" maxlength="2" size="1">';
+      var newCell = tblBodyObj.rows[2].insertCell( - 1);
+      newCell.innerHTML = '<input name="l'+a+'" id="l'+a+'" onkeypress="return isNumberKey(event)" type="text" onchange="saar()" value = "10" maxlength="2" size="1">';
+      var newCell = tblBodyObj.rows[3].insertCell( - 1);
+      newCell.innerHTML = '<input name="h'+a+'" id="h'+a+'" onkeypress="return isNumberKey(event)" type="text" onchange="saar()" value = "10" maxlength="2" size="1">';
+      var newCell = tblBodyObj.rows[4].insertCell( - 1);
+      newCell.innerHTML = '<div align="center" id="pindala'+a+'">-</div>';
+      var newCell = tblBodyObj.rows[5].insertCell( - 1);
+      newCell.innerHTML = '<div align="center"><input type="checkbox" name="m'+a+'" id="m'+a+'" onchange="saaremaa('+a+')"  /></div>';
+      var newCell = tblBodyObj.rows[6].insertCell( - 1);
+      newCell.innerHTML = '<div align="center"><input type="checkbox" name="e'+a+'" id="e'+a+'" checked /></div>';
+      var newCell = tblBodyObj.rows[7].insertCell( - 1);
+      newCell.innerHTML = '<div align="center"><input type="checkbox" name="u'+a+'" id="u'+a+'" onchange="saar()" checked /></div>';
+      var newCell = tblBodyObj.rows[8].insertCell( - 1);
+      newCell.innerHTML = '<div align="center" id="lr'+a+'">-</div>';
+      document.getElementById('x' + a).value = a * 10;
+      document.getElementById('y' + a).value = a * 10;
+      saar();
+      if (saar_arv == 6)
+      {
+         uussaar.disabled = true;
+      }
+   }
+}
+function deleteColumn(tblId)
+{
+   if (saar_arv > 1 && aeg == 0)
+   {
+      saar_arv -- ;
+      uussaar.disabled = false;
+      var allRows = document.getElementById(tblId).rows;
+      for (var i = 0; i < allRows.length; i ++ )
+      {
+         if (allRows[i].cells.length > 1)
+         {
+            allRows[i].deleteCell( - 1);
+         }
+      }
+      saar();
+      if (saar_arv == 1)
+      {
+         saarmaha.disabled = true;
+      }
+   }
+}
+function valmistatud()
+{
+   aegmax = 0;
+   aeg = 0;
+   lrmax = 0;
+   liik_init = 1;
+   liigirikkus.length = 0;
+   elu.length = 0;
+   algliik.disabled = false;
+   saar_max = [0, 0, 0, 0, 0, 0, 0];
+   if (document.getElementById("stsenaarium").value == 0)
+   {
+      loe("#BGSIM,1#START,100,1,1,0.01,0.2,0.005,0.5,100,10,10,10,10,1,1,1#STOP#");
+   }
+   if (document.getElementById("stsenaarium").value == 1)
+   {
+      loe("#BGSIM,1#START,100,5,100,0.01,0.3,0,0,100,10,5,45,90,1,1,0,70,85,10,10,1,0,1,60,55,20,20,1,0,1,60,35,10,10,1,0,1,70,5,20,20,1,0,1#STOP#");
+   }
+   if (document.getElementById("stsenaarium").value == 2)
+   {
+      loe("#BGSIM,1#START,100,3,10,0.01,0.3,0.005,1,200,10,10,30,30,1,1,1,80,5,10,90,1,1,1,5,70,60,15,1,1,1#STOP#");
+   }
+   if (document.getElementById("stsenaarium").value == 3)
+   {
+      loe("#BGSIM,1#START,100,6,10,0.01,0.2,0.005,0.5,100,8,8,34,34,0,1,1,70,70,20,20,1,1,1,10,10,10,10,1,1,0,30,10,10,10,1,1,0,10,30,10,10,1,1,0,30,30,10,10,1,1,0#STOP#");
+   }
+   if (document.getElementById("stsenaarium").value == 4)
+   {
+      // Eesti
+      eesti();
+      loe(tekst);
+      tekst = "";
+   }
+   if (document.getElementById("stsenaarium").value == 5)
+   {
+      // Globaalne
+      globaalne();
+      loe(tekst);
+      tekst = "";
+   }
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      ee = document.getElementById('e' + i);
+      ee.disabled = false;
+      lrtxt = document.getElementById("lr" + i);
+      lrtxt.innerHTML = "-";
+   }
+   document.getElementById("stsenaarium").value = "-1";
+   // nullime stsenaariumi
+   test();
+   saar();
+}
+function saaremaa(saareke)
+{
+   mm = document.getElementById('m' + saareke);
+   saar_m[saareke] = mm.checked;
+   for (x = saar_x[saareke]; x < (saar_x[saareke] + saar_l[saareke]);
+   x ++ )
+   {
+      for (y = saar_y[saareke]; y < (saar_y[saareke] + saar_h[saareke]);
+      y ++ )
+      {
+         if (mm.checked == true)
+         {
+            maa[pos(x, y)] = 1;
+         }
+         if (mm.checked == false)
+         {
+            maa[pos(x, y)] = 0;
+         }
+      }
+   }
+   saar();
+}
+function pos(x, y)
+{
+   return (x - 0) * dim + (y - 0);
+}
+function lrpos(x, y)
+{
+   return (x - 1) * saar_arv + (y - 1);
+}
+function posx(p)
+{
+   return (Math.floor(p / dim) + 0);
+
+}
+function posy(p)
+{
+   return (p - Math.floor(p / dim) * dim + 0);
+}
+function maailm()
+{
+   saardata();
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      if (saar_m[i] == true)
+      {
+         for (x = saar_x[i]; x < (saar_x[i] + saar_l[i]); x ++ )
+         {
+            for (y = saar_y[i]; y < (saar_y[i] + saar_h[i]); y ++ )
+            {
+               maa[pos(x, y)] = 1;
+
+               if (maameri == 0 && x == merix && y == meriy)
+               {
+                  merix = 0;
+                  meriy = 0;
+                  alert(txt23);
+               }
+            }
+         }
+      }
+   }
+   i = maa.length;
+   while(i -- )
+   {
+      if (maa[i] == 0)
+      {
+         elu[i] = 0;
+      }
+      ;
+   }
+}
+function mis()
+{
+   maailm();
+   var a = new Array();
+   var d = 0;
+   c = elu.unique();
+   for (i = 1; i < c.length; i ++ )
+   {
+      a.push(liik_tunnus[c[i]]);
+      d = d + liik_tunnus[c[i]];
+   }
+   d = d / (c.length - 1);
+   alert("Liike ilmas: " + (c.length - 1) + "\nKeskmine tunnus:" + d + "\nTunnused: " + a);
+}
+function eluteke()
+{
+   liik_init = algliik.value;
+   for (i = 1; i <= liik_init; i ++ )
+   {
+      liik_varv[i] = rnd_varv();
+      liik_tunnus[i] = Math.floor(Math.random() * 11)
+   }
+   i = elu.length;
+   while(i -- )
+   {
+      elu[i] = 0;
+   }
+   kontroll = 0;
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      if (saar_e[i] == true )
+      {
+         for (x = saar_x[i]; x < (saar_x[i] + saar_l[i]); x ++ )
+         {
+            for (y = saar_y[i]; y < (saar_y[i] + saar_h[i]); y ++ )
+            {
+               if (maa[pos(x, y)] > 0)
+               {
+                  elu[pos(x, y)] = Math.floor(Math.random() * liik_init) + 1;
+                  kontroll ++ ;
+               }
+            }
+         }
+      }
+   }
+   if (kontroll == 0)
+   {
+      alert(txt24);
+   }
+}
+function hairing()
+{
+   var a = new Array();
+   a = index(elu);
+   a = a.shuffle();
+   var hair = Number(mort.value);
+   if (hair * a.length >= 1 || Math.random() < hair * a.length)
+   {
+      for (i = 0; i < hair * a.length; i ++ )
+      {
+         elu[a[i]] = 0;
+      }
+   }
+}
+function evolutsioon()
+{
+   var a = new Array();
+   a = index(elu);
+   a = a.shuffle();
+   var evol = Number(muta.value);
+   if (evol * a.length >= 1 || Math.random() < evol * a.length)
+   {
+      for (i = 0; i < evol * a.length; i ++ )
+      {
+         liik_init ++ ;
+         liik_varv[liik_init] = rnd_varv();
+         var uustunnus;
+         uustunnus = Math.floor(Math.random() * 11);
+         liik_tunnus[liik_init] = uustunnus;
+         elu[a[i]] = liik_init;
+      }
+   }
+}
+function levimine()
+{
+   var a = new Array();
+   a = index(elu);
+   a = a.shuffle();
+   var levi = Number(disp.value) * 2;
+   if (levi * a.length >= 1 || Math.random() < levi * a.length)
+   {
+      for (i = 0; i < levi * a.length; i ++ )
+      {
+         x = posx(a[i]);
+         y = posy(a[i]);
+         max_kaugus = 0;
+         if (Math.random() * 11 > liik_tunnus[elu[a[i]]])
+         {
+            max_kaugus = (11 - liik_tunnus[elu[a[i]]]) / 10 * dim;
+         }
+         kaugus = max_kaugus - Math.sqrt(Math.random() * (max_kaugus * max_kaugus));
+         suund = 2 * Math.PI * Math.random();
+         xx = Math.floor(x + kaugus * Math.cos(suund));
+         yy = Math.floor(y + kaugus * Math.sin(suund));
+         if (maa[pos(xx, yy)] == 1 && xx < dim && xx >= 0 && yy < dim && yy >= 0)
+         {
+            if (elu[pos(xx, yy)] < 1 )
+            {
+               // on asustamata,
+               elu[pos(xx, yy)] = elu[a[i]];
+            }
+            var konkur = Number(konkurents.value);
+            if (elu[pos(xx, yy)] > 0 && liik_tunnus[elu[a[i]]] >= liik_tunnus[elu[pos(xx, yy)]] && Math.random() < konkur)
+            {
+               elu[pos(xx, yy)] = elu[a[i]];
+            }
+         }
+      }
+   }
+}
+function test()
+{
+   aegmax = 0;
+   aeg = 0;
+   lrmax = 0;
+   liik_init = 1;
+   liigirikkus.length = 0;
+   elu.length = 0;
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      ee = document.getElementById('e' + i);
+      ee.disabled = false;
+      if (saar_arv < 5)
+      {
+         uussaar.disabled = false;
+      }
+      if (saar_arv > 1 )
+      {
+         saarmaha.disabled = false;
+      }
+      lrtxt = document.getElementById("lr" + i);
+      lrtxt.innerHTML = "-";
+   }
+   algliik.disabled = false;
+   saar_max = [0, 0, 0, 0, 0, 0, 0];
+   saar();
+   aitab();
+}
+Array.prototype.shuffle = function()
+{
+   var s = [];
+   while (this.length) s.push(this.splice(Math.random() * this.length, 1));
+   while (s.length) this.push(s.pop());
+   return this;
+}
+Array.prototype.unique = function()
+{
+   var o =
+   {
+   }
+   , i, l = this.length, r = [];
+   for(i = 0; i < l; i += 1) o[this[i]] = this[i];
+   for(i in o) r.push(o[i]);
+   return r;
+}
+function index(arr1)
+{
+   var a = new Array();
+   for (i = 0; i < arr1.length; i ++ )
+   {
+      if (arr1[i] > 0)
+      {
+         a.push(i);
+      }
+   }
+   return a;
+}
+function meri()
+{
+   ctx.fillStyle = "#00FFFF";
+   ctx.strokeStyle = "#00FFFF";
+   rect(0, 0, (WIDTH / 2 + 2 * r), HEIGHT + 2 * r);
+   ctx.fill();
+   ctx.font = "12px Arial";
+   ctx.fillStyle = "steelblue";
+   ctx.fillText("X/Y=0", 10, HEIGHT - 5);
+   ctx.fillText("X=" + dim, WIDTH / 2 - 40, HEIGHT - 5);
+   ctx.fillText("Y=" + dim, 10, 20);
+}
+function saar()
+{
+   clear();
+   meri();
+   maailm();
+   a = index(maa);
+   for(i = 0; i < a.length; i ++ )
+   {
+      rect(posx(a[i]) * r + r, posy(a[i]) * r + r, r, r);
+      ctx.fillStyle = "#9ACD32";
+      ctx.fill();
+   }
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      a = document.getElementById("pindala" + i);
+      if (saar_m[i] == true)
+      {
+         a.innerHTML = saar_l[i] * saar_h[i];
+      }
+      if (saar_m[i] == false)
+      {
+         var pindala = 0;
+         for (x = saar_x[i]; x < (saar_x[i] + saar_l[i]); x ++ )
+         {
+            for (y = saar_y[i]; y < (saar_y[i] + saar_h[i]); y ++ )
+            {
+               pindala = pindala + maa[pos(x, y)];
+            }
+         }
+         if (pindala > 0 )
+         {
+            a.innerHTML = pindala;
+         }
+         if (pindala == 0)
+         {
+            a.innerHTML = "-";
+
+         }
+      }
+   }
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      if (saar_l[i] * saar_h[i] > 0 && saar_u[i] == true)
+      {
+         rect(saar_x[i] * r + r / 2, saar_y[i] * r + r / 2, saar_l[i] * r + r, saar_h[i] * r + r);
+         ctx.strokeStyle = saar_varv[i];
+         ctx.lineWidth = 3;
+         ctx.stroke();
+      }
+   }
+   tun = tunnu[1].checked;
+   var a = new Array();
+   a = index(elu);
+   for (i = 0; i < a.length; i ++ )
+   {
+      x = posx(a[i]) * r;
+      y = posy(a[i]) * r;
+      varv = liik_varv[elu[a[i]]];
+      if (tun == true)
+      {
+         varv = "#" + ((1 << 24) + (Math.floor(liik_tunnus[elu[a[i]]] / 10 * 255) << 16) + (Math.floor(liik_tunnus[elu[a[i]]] / 10 * 255) << 8) + Math.floor(liik_tunnus[elu[a[i]]] / 10 * 255)).toString(16).slice(1);
+      }
+      circle(x + 1.5 * r, y + 1.5 * r, varv);
+   }
+   graaf();
+}
+function circle(x, y, varv)
+{
+   ctx.fillStyle = varv;
+   ctx.beginPath();
+   ctx.arc(x, y, (r / 2), 0, Math.PI * 2, true);
+   ctx.fill();
+}
+function rect(x, y, w, h)
+{
+   ctx.beginPath();
+   ctx.rect(x, y, w, h);
+   ctx.closePath();
+}
+function lr()
+{
+   maxlr = 0;
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      var a = new Array();
+      for (x = saar_x[i]; x < (saar_x[i] + saar_l[i]); x ++ )
+      {
+         for (y = saar_y[i]; y < (saar_y[i] + saar_h[i]); y ++ )
+         {
+            if (elu[pos(x, y)] > 0)
+            {
+               a.push(elu[pos(x, y)]);
+
+            }
+         }
+      }
+      a = a.unique();
+      liigirikkus[lrpos(aeg, i)] = a.length;
+      saar_max[i] = Math.max(saar_max[i], a.length);
+      lrtxt = document.getElementById("lr" + i);
+      if (saar_u[i] == true)
+      {
+         maxlr = Math.max(maxlr, saar_max[i]);
+         lrtxt.innerHTML = a.length;
+      }
+      if (saar_u[i] == false)
+      {
+         lrtxt.innerHTML = "-";
+      }
+   }
+}
+function graaf()
+{
+   saardata();
+   if (aeg > 0)
+   {
+      lr();
+   }
+   ctx.fillStyle = "#FFFFFF";
+   ctx.strokeStyle = "#FFFFFF";
+   rect(WIDTH / 2 + 2 * r, 0, (WIDTH / 2) + 2 * r, HEIGHT + 2 * r);
+   ctx.fill();
+   rect(WIDTH / 2 + 20, 2, WIDTH / 2 - 22, HEIGHT - 22);
+   ctx.strokeStyle = "gray";
+   ctx.lineWidth = 2;
+   ctx.stroke();
+   ctx.font = "16px Arial";
+   ctx.fillStyle = "black";
+   ctx.fillText(txt21 + " (max = " + maxlr + ")", (WIDTH / 2) + 30, 25);
+   ctx.fillText(txt22 + " = 0", WIDTH / 2 + 20, HEIGHT);
+   ctx.fillText(aeg, WIDTH * 0.75, HEIGHT);
+   ctx.textAlign = "right";
+   ctx.fillText(txt22 + " = " + aegmax, WIDTH, HEIGHT);
+   ctx.textAlign = "left";
+   if (maxlr > 0)
+   {
+      lr_unit = (HEIGHT - 50) / maxlr;
+      aeg_unit = ((WIDTH / 2) - 30) / aegmax;
+      for (i = 0; i < saar_arv; i ++ )
+      {
+         if (saar_u[i + 1] == true)
+         {
+            ctx.beginPath();
+            ctx.moveTo(WIDTH / 2 + 20, HEIGHT - 20);
+            for (a = 0; a < aeg; a ++ )
+            {
+               x = Math.round((a * aeg_unit) + (WIDTH / 2) + 20);
+               y = Math.round(HEIGHT - 20 - (liigirikkus[lrpos(a + 1, i + 1)] * lr_unit));
+               ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = saar_varv[i + 1];
+            ctx.lineWidth = 2;
+            ctx.stroke();
+         }
+      }
+   }
+}
+function clear()
+{
+   ctx.clearRect(0, 0, WIDTH + 2 * r, HEIGHT + 2 * r);
+}
+function formsOff()
+{
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      xx = document.getElementById('x' + i);
+      yy = document.getElementById('y' + i);
+      ll = document.getElementById('l' + i);
+      hh = document.getElementById('h' + i);
+      ee = document.getElementById('e' + i);
+      mm = document.getElementById('m' + i);
+      uu = document.getElementById('u' + i);
+      xx.disabled = true;
+      yy.disabled = true;
+      ll.disabled = true;
+      hh.disabled = true;
+      ee.disabled = true;
+      mm.disabled = true;
+      uu.disabled = true;
+      algliik.disabled = true;
+   }
+}
+function formsOn()
+{
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      xx = document.getElementById('x' + i);
+      yy = document.getElementById('y' + i);
+      ll = document.getElementById('l' + i);
+      hh = document.getElementById('h' + i);
+      ee = document.getElementById('e' + i);
+      mm = document.getElementById('m' + i);
+      uu = document.getElementById('u' + i);
+      xx.disabled = false;
+      yy.disabled = false;
+      ll.disabled = false;
+      hh.disabled = false;
+      mm.disabled = false;
+      uu.disabled = false;
+   }
+}
+function saardata()
+{
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      xx = document.getElementById('x' + i);
+      yy = document.getElementById('y' + i);
+      ll = document.getElementById('l' + i);
+      hh = document.getElementById('h' + i);
+      ee = document.getElementById('e' + i);
+      mm = document.getElementById('m' + i);
+      uu = document.getElementById('u' + i);
+      if (Number(xx.value) + Number(ll.value) > dim)
+      {
+         ll.value = dim - xx.value;
+
+      }
+      if (Number(yy.value) + Number(hh.value) > dim)
+      {
+         hh.value = dim - yy.value;
+
+      }
+      saar_x[i] = Number(xx.value);
+      saar_y[i] = dim - Number(yy.value) - Number(hh.value);
+      saar_l[i] = Number(ll.value);
+      saar_h[i] = Number(hh.value);
+      saar_e[i] = ee.checked;
+      saar_m[i] = mm.checked;
+      saar_u[i] = uu.checked;
+   }
+}
+function init()
+{
+   if (aeg == 0 || aeg == aegmax)
+   {
+      paus.disabled = false;
+      kaima.disabled = true;
+      joonista.disabled = true;
+      jooni[1].disabled = true;
+      sisse.disabled = true;
+      valja.disabled = true;
+      stsenaarium.disabled = true;
+      canvas.style.cursor = "default";
+      uussaar.disabled = true;
+      saarmaha.disabled = true;
+      formsOff();
+      maailm();
+      if (aeg == aegmax)
+      {
+         aegmax = aegmax + Number(ddlQuery1.value);
+      }
+      if (aeg == 0)
+      {
+         eluteke();
+
+      }
+      intervalId = setInterval(draw, 0);
+      return intervalId;
+   }
+}
+function rnd_varv()
+{
+   return "#" + ((1 << 24) + (Math.floor(Math.random() * 256) << 16) + (Math.floor(Math.random() * 256) << 8) + Math.floor(Math.random() * 256)).toString(16).slice(1);
+}
+function draw()
+{
+   aeg ++ ;
+   hairing();
+   evolutsioon();
+   levimine();
+   saar();
+   if (aeg >= aegmax)
+   {
+      aitab();
+
+   }
+}
+function aitab()
+{
+   clearInterval(intervalId);
+   formsOn();
+   paus.disabled = true;
+   kaima.disabled = false;
+   joonista.disabled = false;
+   jooni[1].disabled = false;
+   sisse.disabled = false;
+   valja.disabled = false;
+   stsenaarium.disabled = false;
+   canvas.style.cursor = "crosshair";
+   aegmax = aeg;
+   saar();
+}
+function laadi()
+{
+   aegmax = 0;
+   aeg = 0;
+   lrmax = 0;
+   liik_init = 1;
+   liigirikkus.length = 0;
+   elu.length = 0;
+   algliik.disabled = false;
+   saar_max = [0, 0, 0, 0, 0, 0, 0];
+   loe(document.getElementById("tekst").value);
+   document.getElementById("tekst").value = "";
+   saar();
+}
+function salvesta()
+{
+   var tekst;
+   tekst = "#BGSIM,1#START";
+   tekst = tekst + "," + String(dim) + "," + String(saar_arv);
+   tekst = tekst + "," + document.getElementById("algliik").value;
+   tekst = tekst + "," + document.getElementById("mort").value;
+   tekst = tekst + "," + document.getElementById("disp").value;
+   tekst = tekst + "," + document.getElementById("muta").value;
+   tekst = tekst + "," + document.getElementById("konkurents").value;
+   tekst = tekst + "," + document.getElementById("ddlQuery1").value;
+   var b = new Array();
+   var c = new Array();
+   a = index(maa);
+   var kontroll = false;
+   // kas maad on vaja
+   for (i = 1; i <= saar_arv; i ++ )
+   {
+      tekst = tekst + "," + document.getElementById('x' + i).value;
+      tekst = tekst + "," + document.getElementById('y' + i).value;
+      tekst = tekst + "," + document.getElementById('l' + i).value;
+      tekst = tekst + "," + document.getElementById('h' + i).value;
+      tekst = tekst + "," + Number(document.getElementById('m' + i).checked);
+      tekst = tekst + "," + Number(document.getElementById('e' + i).checked);
+      tekst = tekst + "," + Number(document.getElementById('u' + i).checked);
+      if (saar_m[i] == true)
+      {
+         for (x = saar_x[i]; x < (saar_x[i] + saar_l[i]); x ++ )
+         {
+            for (y = saar_y[i]; y < (saar_y[i] + saar_h[i]); y ++ )
+            {
+               b.push(pos(x, y));
+            }
+         }
+      }
+   }
+   b = b.unique();
+   for (i = 0; i < a.length; i ++ )
+   {
+      if (b.indexOf(a[i]) < 0)
+      {
+         kontroll = true;
+         c.push(a[i])
+      }
+   }
+   if (kontroll == true)
+   {
+      tekst = tekst + "#MAA," + c.join();
+   }
+   tekst = tekst + "#STOP#"
+   document.getElementById("tekst").value = tekst;
+   document.getElementById("tekst").select();
+}
+function trim(str)
+{
+   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+}
+function loe(tekst)
+{
+   var j;
+   var ii;
+   var kontroll = false;
+   aa = new Array();
+   b = new Array();
+   aa = tekst.split("#");
+   for (ii = 1; ii < aa.length; ii ++ )
+   {
+      b = aa[ii].split(",");
+      if (ii == 1)
+      {
+         if (trim(b[0]) != "BGSIM")
+         {
+            return;
+         }
+         while(saar_arv > 1)
+         {
+            deleteColumn('tblSaared');
+         }
+         document.getElementById('m1').checked = false;
+         document.getElementById('u1').checked = true;
+         j = maa.length;
+         while(j -- )
+         {
+            maa[j] = 0;
+         }
+      }
+      if (ii == 2)
+      {
+         if (trim(b[0]) != "START")
+         {
+            return;
+         }
+         dim = b[1];
+         document.getElementById("algliik").value = trim(b[3]);
+         document.getElementById("mort").value = trim(b[4]);
+         document.getElementById("disp").value = trim(b[5]);
+         document.getElementById("muta").value = trim(b[6]);
+         document.getElementById("konkurents").value = trim(b[7]);
+         document.getElementById("ddlQuery1").value = trim(b[8]);
+         while(saar_arv > Number(b[2]))
+         {
+            deleteColumn('tblSaared');
+         }
+         while(saar_arv < Number(b[2]))
+         {
+            addColumn('tblSaared');
+         }
+         var c = 9;
+         for (j = 1; j <= saar_arv; j ++ )
+         {
+            document.getElementById('x' + j).value = trim(b[c]);
+            c ++ ;
+            document.getElementById('y' + j).value = trim(b[c]);
+            c ++ ;
+            document.getElementById('l' + j).value = trim(b[c]);
+            c ++ ;
+            document.getElementById('h' + j).value = trim(b[c]);
+            c ++ ;
+            document.getElementById('m' + j).checked = Number(b[c]);
+            c ++ ;
+            document.getElementById('e' + j).checked = Number(b[c]);
+            c ++ ;
+            document.getElementById('u' + j).checked = Number(b[c]);
+            c ++ ;
+         }
+      }
+      if (ii == 3)
+      {
+         if (trim(b[0]) != "MAA")
+         {
+            return;
+         }
+         j = maa.length;
+         while(j -- )
+         {
+            maa[j] = 0;
+         }
+         for (j = 1; j < b.length; j ++ )
+         {
+            maa[Number(b[j])] = 1;
+         }
+      }
+   }
+}
+function keel()
+{
+   if (keel1.checked == true)
+   {
+      document.getElementById("txt1").innerHTML = 'Tartu Ülikooli Biogeograafia kursusele. <a href="bgsim_tutvustus.htm">Biogeograafia simulatsiooni tutvustus</a>';
+      document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); Tartu Ülikooli <a href="http://www.botany.ut.ee/macroecology/">makroökoloogia töörühm</a><br>';
+      document.getElementById("txt3").innerHTML = 'Uurimisala';
+      document.getElementById("txt4").innerHTML = 'Laius (X)';
+      document.getElementById("txt5").innerHTML = 'Pikkus (Y)';
+      document.getElementById("txt6").innerHTML = 'Maismaa pindala';
+      document.getElementById("txt7").innerHTML = 'Maismaa';
+      document.getElementById("txt8").innerHTML = 'Algne asustus';
+      document.getElementById("txt9").innerHTML = 'Uurimise all';
+      document.getElementById("txt10").innerHTML = 'Liigirikkus';
+      document.getElementById("txt11").innerHTML = '<div style="width: 150px">Algselt liike</div>';
+      document.getElementById("txt12").innerHTML = 'Suremus';
+      document.getElementById("txt13").innerHTML = 'Levimine';
+      document.getElementById("txt14").innerHTML = 'Konkurents';
+      document.getElementById("txt15").innerHTML = 'Evolutsioon';
+      document.getElementById("txt16").innerHTML = 'Ajaperiood';
+      document.getElementById("txt18").innerHTML = 'Hiir joonistab';
+      document.getElementById("txt18a").innerHTML = 'Maad';
+      document.getElementById("txt18b").innerHTML = 'Merd';
+      document.getElementById("txt19").innerHTML = 'Värv näitab liigi<input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID<input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> tunnust (hele = tugev konkurent, tume = hea levija)';
+      document.getElementById("txt20").innerHTML = '<form>Stsenaarium: <select name="stsenaarium" id="stsenaarium" onchange="valmistatud()"><option selected="selected" value="-1">- Vali -</option><option value="0">Kustuta saared </option><option value="1">Saarte biogeograafia</option><option value="2">Saare kuju</option><option value="3">Mitu väikest või üks suur?</option><option value="4">Eesti</option><option value="5">Maailm</option></select></form>';
+      document.getElementById("txt25").innerHTML = 'Siia kasti võid kopeerida varem salvestatud maailma või salvesta hetkeolukord ja kopeeri see eraldi faili';
+      document.getElementById("kaima").value = 'KÄIMA';
+      document.getElementById("paus").value = 'SEIS';
+      document.getElementById("algseis").value = 'ALGUS';
+      document.getElementById("sisse").value = 'Lae';
+      document.getElementById("valja").value = 'Salvesta';
+      txt21 = "Liigirikkus";
+      txt22 = "Aeg";
+      txt23 = "Ei saa merd joonistada.\nUurimsala märgitud tabelis maismaaks!";
+      txt24 = "Ei ole maismaad asustamiseks!";
+   }
+   if (keel1.checked == false)
+   {
+      document.getElementById("txt1").innerHTML = 'for the Biogeography course at the University of Tartu. <a href="bgsim_intro.htm">Description of the simulation</a>';
+      document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); <a href="http://www.botany.ut.ee/macroecology/en">Macroecology workgroup</a> at the University of Tartu<br>';
+      document.getElementById("txt3").innerHTML = 'Study area';
+      document.getElementById("txt4").innerHTML = 'Width (X)';
+      document.getElementById("txt5").innerHTML = 'Length (Y)';
+      document.getElementById("txt6").innerHTML = 'Land area';
+      document.getElementById("txt7").innerHTML = 'Land';
+      document.getElementById("txt8").innerHTML = 'Initially populated';
+      document.getElementById("txt9").innerHTML = 'Under investigation';
+      document.getElementById("txt10").innerHTML = 'Species richness';
+      document.getElementById("txt11").innerHTML = '<div style="width: 150px">Initial richness</div>';
+      document.getElementById("txt12").innerHTML = 'Mortality';
+      document.getElementById("txt13").innerHTML = 'Dispersal';
+      document.getElementById("txt14").innerHTML = 'Competition';
+      document.getElementById("txt15").innerHTML = 'Evolution';
+      document.getElementById("txt16").innerHTML = 'Time period';
+      document.getElementById("txt18").innerHTML = 'Mouse draws';
+      document.getElementById("txt18a").innerHTML = 'Land';
+      document.getElementById("txt18b").innerHTML = 'Sea';
+      document.getElementById("txt19").innerHTML = 'Colour indicates species<input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID<input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> trait (light = highly competitive, dark = higly dispersive)';
+      document.getElementById("txt20").innerHTML = '<form>Scenario: <select name="stsenaarium" id="stsenaarium" onchange="valmistatud()"><option selected="selected" value="-1">- Select -</option><option value="0">Delete islands </option><option value="1">Island biogeography</option><option value="2">Island shape</option><option value="3">Single large or several small</option><option value="4">Estonia</option><option value="5">The World</option></select></form>';
+      document.getElementById("txt25").innerHTML = 'Paste a previously saved world to this box or save the current world and copy to a separate file';
+      document.getElementById("kaima").value = 'START';
+      document.getElementById("paus").value = 'STOP';
+      document.getElementById("algseis").value = 'START OVER';
+      document.getElementById("sisse").value = 'Import';
+      document.getElementById("valja").value = 'Export';
+      txt21 = "Species richness";
+      txt22 = "Time";
+      txt23 = "Cannot draw the sea.\nThe study area is designated as land.";
+      txt24 = "No land to colonise!";
+   }
+   saar();
+}
+document.writeln('<script src="bgsim_lisa.js" type=\"text\/javascript\" language=\"javascript\"><\/script>');
+</script>
+</body>
+</html>
