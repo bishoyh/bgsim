@@ -1,0 +1,44 @@
+<html>
+
+<head>
+
+<title>Biogeography simulation / University of Tartu / Meelis P&auml;rtel</title>
+
+</head>
+
+<body>
+<font color="black" size="2" face="Arial">
+<h1><a href="http://www.botany.ut.ee/~meelis/bgsim.htm?eng">BGSIM<i>web</i></a> - online simulation of biogeography</h1>
+
+For the Biogeography course at the University of Tartu programmed by <a href="mailto:meelis.partel@ut.ee">Meelis P&auml;rtel</a>
+<br><br>
+<a href="http://www.botany.ut.ee/~meelis/bgsim.htm?eng">BGSIM<i>web</i></a> is a biogeographic "computer game" which help to understand biogeographical processes. 
+<br><br>
+You can access the simulation in: <a href="http://www.botany.ut.ee/~meelis/bgsim.htm?eng">http://www.botany.ut.ee/~meelis/bgsim.htm?eng</a>
+<br><br>
+<b>BGSIM<i>web</i></b> allows to simulate different situations and to follow changes in biodiversity in ecological and evolutionary time-scales.
+Within a global ocean you can create islands and continents for species colonisation. The world is divided into gird cells (100 x 100 cells) and each land cell can be inhabited by a single species (this can be considered a population). You can specify parameters and rules how species die, disperse, compete and evolve. Species have different dispersal and competition abilities. These traits have a trade-off: highly competitive species do not disperse well (smaller probability to give descendants and these disperse mainly close-by); weak competitors are highly dispersive (high probability to give descendants, these disperse far). <b>Mortality</b> is due to random disturbance, where some cells become empty according to set probability. <b>Dispersal</b> probability expresses the likelihood of species giving descendants that try to occupy other cells. Dispersal likelihood will decrease with distance, and dispersal probability and distance depend on species' trait. Empty land cells are always colonised but colonisation of occupied cells depends on competition. <b>Competition</b> occurs if a new individual disperses into an occupied cell. Competition probability expresses the likelihood of a stronger competitor replacing a weaker one. Competition probability 0 means that no species are replaced (only empty cells can be colonised), 1 means that a stronger competitor always replaces a weaker one. <b>Evolution</b> probability expresses the likelihood of a single population evolving into a new species. The trait of the new species (from the gradient competitive-dispersive) is selected randomly.
+<br><br>
+In the simulation www page you will find the following fields: (1) <b>the world</b> in which to define islands and continents and study areas (coloured boxes); (2) <b>biodiversity</b> dynamics; (3) <b>parameters</b> in a table, and (4) <b>input/output</b> to save or load a simulation.
+<br><br>
+<img src="bgsim_eng.jpg">
+<br><br> 
+<b>In the field of the world</b> you can draw rectangular land or sea areas by holding down the mouse button and moving along the diagonal of a rectangular area. You can select under the field whether the mouse draws land or sea. You can shift borders of the study areas by holding down the mouse button exactly on the border of the study area. If the simulation is running you can select whether species (dots) are indicated by individual colour ID or by trait value (light means highly competitive and dark highly dispersive).
+<br><br>
+<b>In the field of biodiversity</b> dynamics species richness dynamics in study areas are displayed during the simulation. The graph colour indicates the study area in the field of the world and in the table of the parameters. You can see maximal species richness and time. During the simulation in the bottom of the field actual time is running. NB! The unit of the time is relative; it can be days for viruses or millions of years for some animals.
+<br><br>
+<b>In the table of parameters</b> you can change language (English or Estonian). Initially you have a single study area but you can add and remove study areas using "+" and "-" buttons. The maximum number of study areas is six. All study areas are defined according to their coordinates (X, Y, the lower left corner), width (X) and length (Y). Land area is calculated automatically for each study area. Similarly, species richness is shown during the simulation. For each study area you can select whether it is land or sea. By changing this parameter, the respective area in the field of the world changes to land or sea, respectively. If the land is not marked, you can still draw land areas in this study area with the mouse. You cannot draw sea into study areas designated as land. Following you can select whether the study area is initially populated and whether the richness of this area is investigated. If your study area is not under investigation, you can use these areas simply to draw islands. After the simulation you can change the "under investigation" parameter to show more or fewer graphs.
+<br><br>
+In the next part of the table you can select parameters of the simulation - initial species richness, mortality (disturbance) probability, dispersal probability, competition probability, evolution probability, and time period for a single run.
+<br><br>
+Button "Start" initiates the simulation. First study areas marked as "initially populated" are filled with species and then the simulation proceeds according to parameters. If needed, you can stop the simulation with the button "Stop". Button "Start over" starts from the beginning (islands and continents remain the same but biodiversity is removed, you can add or remove study areas and change parameters). Once the simulation has finished you can change parameters (e.g. change borders of study areas, change probabilities for mortality, dispersal, competition and evolution, draw new land or sea). Pressing "Start" again will start the next simulation.
+You can select some pre-prepared scenarios. Attention: by selecting a new scenario the existing world is lost!
+<br><br>
+<b>In the field of input/output</b> you can export and import worlds and simulation parameters. Button "Export" puts a text into the box below; you can copy it to a separate file to be saved. In order to help copying, the exported text is already selected and you need just copy (e.g. Ctrl+C). If you paste the same text into the box and press "Import", the saved world and parameters will be loaded for simulation.
+<br><br>
+<a href="http://www.botany.ut.ee/~meelis/bgsim.htm?eng">BGSIM<i>web</i></a> has been tested with www browsers Mozilla Firefox, Internet Explorer, Google Chrome and Safari. You need newer versions! All questions, suggestions and reports of possible problems are welcome: <a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>
+</font>
+
+</body>
+
+</html>
