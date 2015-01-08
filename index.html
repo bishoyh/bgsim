@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
   <head>
-<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-    <title>BGSIMweb - Biogeograafia simulatsioon / Biogeography simulation / Meelis PÃ¤rtel / Tartu Ãœlikool / University of Tartu</title>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1" />
+<meta name="viewport"  content="width=device-width, height=device-height, initial-scale=0.8, user-scalable=1" />
+    <title>BGSIMweb - Biogeograafia simulatsioon / Biogeography simulation / Meelis Pärtel / Tartu Ülikool / University of Tartu</title>
     <STYLE TYPE="text/css">
 INPUT {text-align: right; }
 #canvas {cursor: crosshair;}
@@ -91,7 +92,7 @@ var tekst;
 <input type="radio" name="joonista1" id="joonista" value="0"><span id="txt18b"><!-- Merd --></span>
 </form>
 <form name="tunnu" id="txt19">
- VÃ¤rv nÃ¤itab liigi
+ Värv näitab liigi
 <input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID
 <input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> tunnust (hele = konkurent, tume = levija)
 </form>
@@ -244,7 +245,7 @@ var tekst;
 </td></tr><tr><td>
 <div style="width: 300px">
 <FORM>
-<INPUT TYPE="BUTTON" VALUE="KÃ„IMA" id="kaima" onClick="init()">
+<INPUT TYPE="BUTTON" VALUE="KÄIMA" id="kaima" onClick="init()">
 <INPUT TYPE="BUTTON" VALUE="SEIS" id="paus" onClick="aitab()">
 <INPUT TYPE="BUTTON" VALUE="ALGUS" id="algseis" onClick="test()">
 </FORM>
@@ -259,7 +260,7 @@ Stsenaarium:
 <option value="0">Kustuta saared </option>
 <option value="1">Saarte biogeograafia</option>
 <option value="2">Saare kuju</option>
-<option value="3">Mitu vÃ¤ikest vÃµi Ã¼ks suur?</option>
+<option value="3">Mitu väikest või üks suur?</option>
 </select>
 </form>
 </td> </tr>
@@ -476,7 +477,7 @@ function mouseMove(e)
       }
       if (hall > 0 && halliks == 0 )
       {
-         // hallilt Ã¤ra minek
+         // hallilt ära minek
          rect(saar_x[hall] * r + r / 2, saar_y[hall] * r + r / 2, saar_l[hall] * r + r, saar_h[hall] * r + r);
          ctx.strokeStyle = saar_varv[hall];
          ctx.lineWidth = 3;
@@ -1413,8 +1414,8 @@ function keel()
 {
    if (keel1.checked == true)
    {
-      document.getElementById("txt1").innerHTML = 'Tartu Ãœlikooli Biogeograafia kursusele. <a href="bgsim_tutvustus.htm">Biogeograafia simulatsiooni tutvustus</a>';
-      document.getElementById("txt2").innerHTML = 'Meelis PÃ¤rtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); Tartu Ãœlikooli <a href="http://www.botany.ut.ee/macroecology/">makroÃ¶koloogia tÃ¶Ã¶rÃ¼hm</a><br>';
+      document.getElementById("txt1").innerHTML = 'Tartu Ülikooli Biogeograafia kursusele. <a href="bgsim_tutvustus.htm">Biogeograafia simulatsiooni tutvustus</a>';
+      document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); Tartu Ülikooli <a href="http://www.botany.ut.ee/macroecology/">makroökoloogia töörühm</a><br>';
       document.getElementById("txt3").innerHTML = 'Uurimisala';
       document.getElementById("txt4").innerHTML = 'Laius (X)';
       document.getElementById("txt5").innerHTML = 'Pikkus (Y)';
@@ -1432,23 +1433,23 @@ function keel()
       document.getElementById("txt18").innerHTML = 'Hiir joonistab';
       document.getElementById("txt18a").innerHTML = 'Maad';
       document.getElementById("txt18b").innerHTML = 'Merd';
-      document.getElementById("txt19").innerHTML = 'VÃ¤rv nÃ¤itab liigi<input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID<input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> tunnust (hele = tugev konkurent, tume = hea levija)';
-      document.getElementById("txt20").innerHTML = '<form>Stsenaarium: <select name="stsenaarium" id="stsenaarium" onchange="valmistatud()"><option selected="selected" value="-1">- Vali -</option><option value="0">Kustuta saared </option><option value="1">Saarte biogeograafia</option><option value="2">Saare kuju</option><option value="3">Mitu vÃ¤ikest vÃµi Ã¼ks suur?</option><option value="4">Eesti</option><option value="5">Maailm</option></select></form>';
-      document.getElementById("txt25").innerHTML = 'Siia kasti vÃµid kopeerida varem salvestatud maailma vÃµi salvesta hetkeolukord ja kopeeri see eraldi faili';
-      document.getElementById("kaima").value = 'KÃ„IMA';
+      document.getElementById("txt19").innerHTML = 'Värv näitab liigi<input type="radio" name="tunnus1" id="tunnus" value="1" checked onChange="saar()"> ID<input type="radio" name="tunnus1" id="tunnus" value="0" onChange="saar()"> tunnust (hele = tugev konkurent, tume = hea levija)';
+      document.getElementById("txt20").innerHTML = '<form>Stsenaarium: <select name="stsenaarium" id="stsenaarium" onchange="valmistatud()"><option selected="selected" value="-1">- Vali -</option><option value="0">Kustuta saared </option><option value="1">Saarte biogeograafia</option><option value="2">Saare kuju</option><option value="3">Mitu väikest või üks suur?</option><option value="4">Eesti</option><option value="5">Maailm</option></select></form>';
+      document.getElementById("txt25").innerHTML = 'Siia kasti võid kopeerida varem salvestatud maailma või salvesta hetkeolukord ja kopeeri see eraldi faili';
+      document.getElementById("kaima").value = 'KÄIMA';
       document.getElementById("paus").value = 'SEIS';
       document.getElementById("algseis").value = 'ALGUS';
       document.getElementById("sisse").value = 'Lae';
       document.getElementById("valja").value = 'Salvesta';
       txt21 = "Liigirikkus";
       txt22 = "Aeg";
-      txt23 = "Ei saa merd joonistada.\nUurimsala mÃ¤rgitud tabelis maismaaks!";
+      txt23 = "Ei saa merd joonistada.\nUurimsala märgitud tabelis maismaaks!";
       txt24 = "Ei ole maismaad asustamiseks!";
    }
    if (keel1.checked == false)
    {
       document.getElementById("txt1").innerHTML = 'for the Biogeography course at the University of Tartu. <a href="bgsim_intro.htm">Description of the simulation</a>';
-      document.getElementById("txt2").innerHTML = 'Meelis PÃ¤rtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); <a href="http://www.botany.ut.ee/macroecology/en">Macroecology workgroup</a> at the University of Tartu<br>';
+      document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); <a href="http://www.botany.ut.ee/macroecology/en">Macroecology workgroup</a> at the University of Tartu<br>';
       document.getElementById("txt3").innerHTML = 'Study area';
       document.getElementById("txt4").innerHTML = 'Width (X)';
       document.getElementById("txt5").innerHTML = 'Length (Y)';
