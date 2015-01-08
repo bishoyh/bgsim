@@ -14,8 +14,29 @@ body {
 }
 
 </STYLE>
+
+  <script type="text/javascript">
+
+   function OnLoad(){
+     document.addEventListener('deviceready', function(){
+        //enabling zoom control
+         cordova.plugins.ZoomControl.ZoomControl("true");
+         // enabling built in zoom control
+         cordova.plugins.ZoomControl.setBuiltInZoomControls("true");
+         // enabling display zoom control
+         cordova.plugins.ZoomControl.setDisplayZoomControls("true");
+
+     }, function(){
+         alert('error deviceready');
+     });
+
+   }
+    </script>
+
+
+
   </head>
-<body>
+<body onload="OnLoad();">
 <script language="javascript" type="text/javascript">
 var canvas;
 var ctx;
@@ -64,11 +85,27 @@ var saar_max = [0, 0, 0, 0, 0, 0, 0];
 var maxlr = 0;
 var sissevalja;
 var tekst;
+
+
+
+
+
+
 </script>
 <div id="main" align="left">
 <font size="5" face="Arial">BGSIM<i>web</i></font>
-<font  size="3" face="Arial ">  ver. 1.1 -  <span id="txt1"></span>
-<div id="txt2"></div></font>
+<font  size="3" face="Arial ">  ver. 1.1.  <span id="txt1"></span>
+<div id="txt2"></div>
+
+<div align="left">
+<form id="keel0">
+<input type="radio" name="keel1" id="keel1" value="1" onChange="keel()">EST
+<input type="radio" name="keel1" id="keel1" value="0" checked onChange="keel()">ENG
+</form>
+</div>
+
+
+</font>
 <table border="0" align="left">
    <tr VALIGN=TOP>
    <td>
@@ -100,12 +137,6 @@ var tekst;
 </td>
       <td>
 <font  size="3" face="Arial">
-<div align="right">
-<form id="keel0">
-<input type="radio" name="keel1" id="keel1" value="1" checked onChange="keel()">EST
-<input type="radio" name="keel1" id="keel1" value="0" onChange="keel()">ENG
-</form>
-</div>
 <table BORDER=2 CELLPADDING=3 CELLSPACING=1 RULES=ROWS FRAME=HSIDES >
    <tr>
       <td>
@@ -1406,7 +1437,7 @@ function keel()
 {
    if (keel1.checked == true)
    {
-      document.getElementById("txt1").innerHTML = 'Tartu Ülikooli Biogeograafia kursusele. <a href="http://www.botany.ut.ee/~meelis/bgsim_tutvustus.htm">Biogeograafia simulatsiooni tutvustus</a>';
+      document.getElementById("txt1").innerHTML = '<a href="http://www.botany.ut.ee/~meelis/bgsim_tutvustus.htm">Biogeograafia simulatsiooni tutvustus</a>';
       document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); Tartu Ülikooli <a href="http://www.botany.ut.ee/macroecology/">makroökoloogia töörühm</a><br>';
       document.getElementById("txt3").innerHTML = 'Uurimisala';
       document.getElementById("txt4").innerHTML = 'Laius (X)';
@@ -1440,7 +1471,7 @@ function keel()
    }
    if (keel1.checked == false)
    {
-      document.getElementById("txt1").innerHTML = 'for the Biogeography course at the University of Tartu. <a href="http://www.botany.ut.ee/~meelis/bgsim_intro.htm">Description of the simulation</a>';
+      document.getElementById("txt1").innerHTML = '<a href="http://www.botany.ut.ee/~meelis/bgsim_intro.htm">Description of the simulation</a>';
       document.getElementById("txt2").innerHTML = 'Meelis Pärtel (<a href="mailto:meelis.partel@ut.ee">meelis.partel@ut.ee</a>); <a href="http://www.botany.ut.ee/macroecology/en">Macroecology workgroup</a> at the University of Tartu<br>';
       document.getElementById("txt3").innerHTML = 'Study area';
       document.getElementById("txt4").innerHTML = 'Width (X)';

@@ -20,5 +20,6 @@
   <preference name="android-minSdkVersion" value="7"/>
   <preference name="android-installLocation" value="auto"/>
   <icon src="icon.png"/>
+  <gap:plugin name="com.kumbe.phonegap.zoom.zoomcontrol" version="0.1.7" />
   <access origin="*"/>
 </widget>
